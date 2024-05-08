@@ -1,4 +1,5 @@
 import random
+import copy
 from termcolor import colored
 
 from player import Player
@@ -19,7 +20,7 @@ class Game:
 
         # initialize the players
         self.player1 = Player('player 1', [0,0]) 
-        self.player2 = Player('player 2', [1,1])
+        self.player2 = Player('player 2', [rows-1,cols-1])
 
         self.current_iteration = 0
     
@@ -40,6 +41,10 @@ class Game:
         if move == 0:
             new_r = player.position[0] - 1
             new_c = player.position[1]
+              
+            # check if row is negative
+            if new_r < 0: return False
+
             bc_value = self.blocked_cells[new_r][new_c]  
 
             if bc_value != 0 and bc_value != player.name:
@@ -51,6 +56,10 @@ class Game:
         elif move == 1:
             new_r = player.position[0] + 1
             new_c = player.position[1]
+
+            # check if row index is out of bound
+            if new_r >= self.rows: return False
+            
             bc_value = self.blocked_cells[new_r][new_c]  
 
             if bc_value != 0 and bc_value != player.name:
@@ -62,6 +71,11 @@ class Game:
         elif move == 2:
             new_r = player.position[0]
             new_c = player.position[1] - 1
+
+            # check if column is negative
+            if new_c < 0:
+                return False
+
             bc_value = self.blocked_cells[new_r][new_c]  
 
             if bc_value != 0 and bc_value != player.name:
@@ -73,6 +87,11 @@ class Game:
         elif move == 3:
             new_r = player.position[0]
             new_c = player.position[1] + 1
+            
+            # check if column is out of bound
+            if new_c >= self.cols:
+                return False
+
             bc_value = self.blocked_cells[new_r][new_c]  
 
             if bc_value != 0 and bc_value != player.name:
@@ -186,3 +205,13 @@ class Game:
                 row.append(0)
             blocked_cells.append(row)
         return blocked_cells
+
+    def clone(self):
+        game = Game(self.rows, self.cols)
+        game.board = copy.deepcopy(self.board)
+        game.blocked_cells = copy.deepcopy(self.blocked_cells)
+        game.player1.position = copy.copy(self.player1.position)
+        game.player2.position = copy.copy(self.player2.position)
+        game.current_iteration = self.current_iteration
+
+        return game
