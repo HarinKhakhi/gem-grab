@@ -210,8 +210,13 @@ class Game:
         game = Game(self.rows, self.cols)
         game.board = copy.deepcopy(self.board)
         game.blocked_cells = copy.deepcopy(self.blocked_cells)
+
         game.player1.position = copy.copy(self.player1.position)
         game.player2.position = copy.copy(self.player2.position)
+
+        game.player1.score = self.player1.score
+        game.player2.score = self.player2.score
+
         game.current_iteration = self.current_iteration
 
         return game
